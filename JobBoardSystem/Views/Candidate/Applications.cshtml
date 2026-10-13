@@ -1,0 +1,38 @@
+@model IList<SeekerApplicationItemViewModel>
+@{
+    ViewBag.Title = "My applications";
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        @Html.Partial("_StatusMessage")
+        <div class="jb-panel">
+            <table class="jb-table">
+                <tr><th>Job</th><th>Company</th><th>Status</th><th>Applied</th><th></th></tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td><a href="@Url.Action("Details", "Jobs", new { id = item.JobPostingId })">@item.JobTitle</a></td>
+                        <td>@item.CompanyName</td>
+                        <td>@item.Status</td>
+                        <td>@item.AppliedAt.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @if (item.CanWithdraw)
+                            {
+                                using (Html.BeginForm("Withdraw", "Candidate", new { id = item.Id }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit">Withdraw</button>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+            @if (!Model.Any())
+            {
+                <p>You have not submitted any applications.</p>
+            }
+        </div>
+    </div>
+</section>

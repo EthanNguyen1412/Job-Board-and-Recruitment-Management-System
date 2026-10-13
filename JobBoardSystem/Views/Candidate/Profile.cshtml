@@ -1,0 +1,168 @@
+@model CandidateProfilePageViewModel
+@{
+    ViewBag.Title = "Candidate profile";
+    var profile = Model.Profile;
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        @Html.Partial("_StatusMessage")
+        <div class="jb-panel">
+            <h3>Profile completion: @Model.CompletionPercent%</h3>
+            <div class="progress-line"><span style="width:@Model.CompletionPercent%"></span></div>
+        </div>
+        <div class="jb-panel contact">
+            <h3>Personal information</h3>
+            @using (Html.BeginForm("SaveProfile", "Candidate"))
+            {
+                @Html.AntiForgeryToken()
+                <label>Headline</label>
+                <input type="text" name="Headline" value="@profile.Headline" class="form-control" />
+                <label>Summary</label>
+                <textarea name="Summary" class="form-control" rows="4">@profile.Summary</textarea>
+                <label>Phone</label>
+                <input type="text" name="Phone" value="@profile.Phone" class="form-control" />
+                <label>Address</label>
+                <input type="text" name="Address" value="@profile.Address" class="form-control" />
+                <label>Date of birth</label>
+                <input type="date" name="DateOfBirth" value="@(profile.DateOfBirth.HasValue ? profile.DateOfBirth.Value.ToString("yyyy-MM-dd") : "")" class="form-control" />
+                <button type="submit" class="contact_btn">Save profile</button>
+            }
+        </div>
+        <div class="jb-panel">
+            <h3>Resume</h3>
+            @if (!string.IsNullOrEmpty(profile.ResumeFileName))
+            {
+                <p>Current file: @profile.ResumeFileName</p>
+                <p><a href="@Url.Action("DownloadResume", "Candidate")">Download uploaded resume</a></p>
+            }
+            @using (Html.BeginForm("UploadResume", "Candidate", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                @Html.AntiForgeryToken()
+                <input type="file" name="resumeFile" />
+                <button type="submit" class="contact_btn">Upload</button>
+            }
+            <p><a class="contact_btn" href="@Url.Action("ExportPdf", "Candidate")">Export PDF resume</a></p>
+        </div>
+        <div class="jb-panel">
+            <h3>Education</h3>
+            <table class="jb-table">
+                <tr><th>School</th><th>Degree</th><th>Field</th><th>Period</th><th></th></tr>
+                @foreach (var item in profile.Educations.OrderByDescending(x => x.StartDate))
+                {
+                    <tr>
+                        <td>@item.School</td>
+                        <td>@item.Degree</td>
+                        <td>@item.FieldOfStudy</td>
+                        <td>@item.StartDate.ToString("MM/yyyy") - @(item.EndDate.HasValue ? item.EndDate.Value.ToString("MM/yyyy") : "Present")</td>
+                        <td>
+                            @using (Html.BeginForm("DeleteEducation", "Candidate", new { id = item.Id }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit">Delete</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+            @using (Html.BeginForm("AddEducation", "Candidate"))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-4"><input name="School" class="form-control" placeholder="School" required /></div>
+                    <div class="col-md-4"><input name="Degree" class="form-control" placeholder="Degree" required /></div>
+                    <div class="col-md-4"><input name="FieldOfStudy" class="form-control" placeholder="Field of study" /></div>
+                    <div class="col-md-3"><input type="date" name="StartDate" class="form-control" required /></div>
+                    <div class="col-md-3"><input type="date" name="EndDate" class="form-control" /></div>
+                    <div class="col-md-6"><input name="Description" class="form-control" placeholder="Description" /></div>
+                    <div class="col-md-12"><button type="submit" class="contact_btn">Add education</button></div>
+                </div>
+            }
+        </div>
+        <div class="jb-panel">
+            <h3>Work experience</h3>
+            <table class="jb-table">
+                <tr><th>Company</th><th>Title</th><th>Period</th><th></th></tr>
+                @foreach (var item in profile.WorkExperiences.OrderByDescending(x => x.StartDate))
+                {
+                    <tr>
+                        <td>@item.CompanyName</td>
+                        <td>@item.JobTitle</td>
+                        <td>@item.StartDate.ToString("MM/yyyy") - @(item.IsCurrent || !item.EndDate.HasValue ? "Present" : item.EndDate.Value.ToString("MM/yyyy"))</td>
+                        <td>
+                            @using (Html.BeginForm("DeleteExperience", "Candidate", new { id = item.Id }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit">Delete</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+            @using (Html.BeginForm("AddExperience", "Candidate"))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-6"><input name="CompanyName" class="form-control" placeholder="Company" required /></div>
+                    <div class="col-md-6"><input name="JobTitle" class="form-control" placeholder="Job title" required /></div>
+                    <div class="col-md-3"><input type="date" name="StartDate" class="form-control" required /></div>
+                    <div class="col-md-3"><input type="date" name="EndDate" class="form-control" /></div>
+                    <div class="col-md-3"><label><input type="checkbox" name="IsCurrent" value="true" /> Current job</label><input type="hidden" name="IsCurrent" value="false" /></div>
+                    <div class="col-md-12"><textarea name="Description" class="form-control" placeholder="Description"></textarea></div>
+                    <div class="col-md-12"><button type="submit" class="contact_btn">Add experience</button></div>
+                </div>
+            }
+        </div>
+        <div class="jb-panel">
+            <h3>Skills</h3>
+            @foreach (var item in profile.Skills.OrderBy(x => x.Skill.Name))
+            {
+                <span class="jb-badge">@item.Skill.Name (@item.Level.GetDisplayName())
+                    @using (Html.BeginForm("DeleteSkill", "Candidate", new { id = item.Id }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit">x</button>
+                    }
+                </span>
+            }
+            @using (Html.BeginForm("AddSkill", "Candidate"))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-5">@Html.DropDownList("SkillId", Model.Skills, "Select skill", new { @class = "form-control" })</div>
+                    <div class="col-md-4">@Html.DropDownList("Level", Model.SkillLevels, new { @class = "form-control" })</div>
+                    <div class="col-md-3"><button type="submit" class="contact_btn">Add skill</button></div>
+                </div>
+            }
+        </div>
+        <div class="jb-panel">
+            <h3>Languages</h3>
+            <table class="jb-table">
+                <tr><th>Language</th><th>Proficiency</th><th></th></tr>
+                @foreach (var item in profile.Languages.OrderBy(x => x.LanguageName))
+                {
+                    <tr>
+                        <td>@item.LanguageName</td>
+                        <td>@item.Proficiency.GetDisplayName()</td>
+                        <td>
+                            @using (Html.BeginForm("DeleteLanguage", "Candidate", new { id = item.Id }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit">Delete</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+            @using (Html.BeginForm("AddLanguage", "Candidate"))
+            {
+                @Html.AntiForgeryToken()
+                <div class="row">
+                    <div class="col-md-5"><input name="LanguageName" class="form-control" placeholder="Language" required /></div>
+                    <div class="col-md-4">@Html.DropDownList("Proficiency", Model.Proficiencies, new { @class = "form-control" })</div>
+                    <div class="col-md-3"><button type="submit" class="contact_btn">Add language</button></div>
+                </div>
+            }
+        </div>
+    </div>
+</section>

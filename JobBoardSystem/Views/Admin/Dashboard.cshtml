@@ -1,0 +1,56 @@
+@model DashboardViewModel
+@{
+    ViewBag.Title = "Administration dashboard";
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3"><div class="jb-stat"><strong>@Model.ActiveJobCount</strong><span>Active postings</span></div></div>
+            <div class="col-md-3"><div class="jb-stat"><strong>@Model.ApplicationCount</strong><span>Applications</span></div></div>
+            <div class="col-md-3"><div class="jb-stat"><strong>@Model.EmployerCount</strong><span>Employers</span></div></div>
+            <div class="col-md-3"><div class="jb-stat"><strong>@Model.SeekerCount</strong><span>Job seekers</span></div></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="jb-panel">
+                    <h3>Application volume</h3>
+                    <table class="jb-table">
+                        @foreach (var item in Model.ApplicationsByStatus)
+                        {
+                            <tr><td>@item.Name</td><td>@item.Count</td></tr>
+                        }
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="jb-panel">
+                    <h3>Popular categories</h3>
+                    <table class="jb-table">
+                        <tr><th>Category</th><th>Applications</th></tr>
+                        @foreach (var item in Model.PopularCategories)
+                        {
+                            <tr><td>@item.Name</td><td>@item.Count</td></tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="jb-panel">
+            <h3>Employer activity</h3>
+            <table class="jb-table">
+                <tr><th>Employer</th><th>Company</th><th>Active jobs</th><th>Total jobs</th><th>Applications</th></tr>
+                @foreach (var item in Model.EmployerActivity)
+                {
+                    <tr>
+                        <td>@item.EmployerName</td>
+                        <td>@item.CompanyName</td>
+                        <td>@item.ActiveJobs</td>
+                        <td>@item.TotalJobs</td>
+                        <td>@item.Applications</td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</section>

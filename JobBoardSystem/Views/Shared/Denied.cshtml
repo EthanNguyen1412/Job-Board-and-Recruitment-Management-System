@@ -1,0 +1,12 @@
+@{
+    ViewBag.Title = "Access denied";
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        <div class="jb-panel text-center">
+            <h3>You do not have permission to open this page.</h3>
+            <a class="contact_btn" href="@Url.Action("Index", "Home")">Back to home</a>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,55 @@
+@model JobFormViewModel
+@{
+    ViewBag.Title = Model.Id == 0 ? "Create job posting" : "Edit job posting";
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        <div class="jb-panel contact">
+            @using (Html.BeginForm(Model.Id == 0 ? "CreateJob" : "EditJob", "Employer"))
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.Id)
+                @Html.ValidationSummary(true)
+                <label>Title</label>
+                @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+                <label>Company name</label>
+                @Html.TextBoxFor(m => m.CompanyName, new { @class = "form-control" })
+                <label>Category</label>
+                @Html.DropDownListFor(m => m.JobCategoryId, Model.Categories, new { @class = "form-control" })
+                <label>Description</label>
+                @Html.TextAreaFor(m => m.Description, 6, 40, new { @class = "form-control" })
+                <label>Work type</label>
+                @Html.DropDownListFor(m => m.WorkType, Model.WorkTypes, new { @class = "form-control" })
+                <div class="row">
+                    <div class="col-md-6">
+                        <label>Minimum salary</label>
+                        @Html.TextBoxFor(m => m.SalaryMin, new { @class = "form-control", type = "number", step = "1" })
+                    </div>
+                    <div class="col-md-6">
+                        <label>Maximum salary</label>
+                        @Html.TextBoxFor(m => m.SalaryMax, new { @class = "form-control", type = "number", step = "1" })
+                    </div>
+                </div>
+                <label>Location</label>
+                @Html.TextBoxFor(m => m.Location, new { @class = "form-control" })
+                <label>Application deadline</label>
+                <input type="date" name="ApplicationDeadline" value="@Model.ApplicationDeadline.ToString("yyyy-MM-dd")" class="form-control" />
+                <label><input type="checkbox" name="IsFeatured" value="true" @(Model.IsFeatured ? "checked" : "") /> Featured on homepage</label>
+                <input type="hidden" name="IsFeatured" value="false" />
+                <h4>Required skills</h4>
+                @Html.ValidationMessage("SelectedSkillIds")
+                <div>
+                    @foreach (var skill in Model.Skills)
+                    {
+                        <label class="skill-check">
+                            <input type="checkbox" name="SelectedSkillIds" value="@skill.Value" @(skill.Selected ? "checked" : "") />
+                            @skill.Text
+                        </label>
+                    }
+                </div>
+                <button type="submit" class="contact_btn">Save posting</button>
+            }
+        </div>
+    </div>
+</section>

@@ -1,0 +1,47 @@
+@model CategoryPageViewModel
+@{
+    ViewBag.Title = "Job categories";
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        @Html.Partial("_StatusMessage")
+        <div class="jb-panel contact">
+            <h3>@(Model.Input.Id == 0 ? "Add category" : "Edit category")</h3>
+            @using (Html.BeginForm("SaveCategory", "Admin"))
+            {
+                @Html.AntiForgeryToken()
+                @Html.Hidden("Id", Model.Input.Id)
+                @Html.ValidationSummary(true)
+                <label>Name</label>
+                <input type="text" name="Name" value="@Model.Input.Name" class="form-control" required />
+                <label>Description</label>
+                <textarea name="Description" class="form-control">@Model.Input.Description</textarea>
+                <label><input type="checkbox" name="IsActive" value="true" @(Model.Input.IsActive ? "checked" : "") /> Active</label>
+                <input type="hidden" name="IsActive" value="false" />
+                <button type="submit" class="contact_btn">Save category</button>
+            }
+        </div>
+        <div class="jb-panel">
+            <table class="jb-table">
+                <tr><th>Name</th><th>Description</th><th>Status</th><th></th></tr>
+                @foreach (var category in Model.Categories)
+                {
+                    <tr>
+                        <td>@category.Name</td>
+                        <td>@category.Description</td>
+                        <td>@(category.IsActive ? "Active" : "Inactive")</td>
+                        <td class="jb-actions">
+                            <a href="@Url.Action("EditCategory", "Admin", new { id = category.Id })">Edit</a>
+                            @using (Html.BeginForm("DeleteCategory", "Admin", new { id = category.Id }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit">Delete</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</section>

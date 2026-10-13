@@ -1,0 +1,43 @@
+@model CompanyDetailsViewModel
+@{
+    ViewBag.Title = Model.Company.CompanyName;
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        <div class="jb-panel">
+            <div class="company-mark">
+                @if (!string.IsNullOrEmpty(Model.Company.LogoPath))
+                {
+                    <img src="@Url.Content("~/" + Model.Company.LogoPath)" alt="@Model.Company.CompanyName" />
+                }
+                else
+                {
+                    @Model.Company.CompanyName.Substring(0, 1)
+                }
+            </div>
+            <h2>@Model.Company.CompanyName</h2>
+            <span class="jb-badge">@Model.Company.Industry</span>
+            <p>@Model.Company.Description</p>
+            <p>@Model.Company.Address</p>
+            <p>@Model.Company.Phone</p>
+            @if (!string.IsNullOrEmpty(Model.Company.Website))
+            {
+                <p><a href="@Model.Company.Website" target="_blank" rel="noopener">@Model.Company.Website</a></p>
+            }
+        </div>
+        <h3>Active job postings</h3>
+        <div class="row">
+            @foreach (var job in Model.ActiveJobs)
+            {
+                <div class="col-lg-4 col-sm-6">
+                    @Html.Partial("_JobCard", job)
+                </div>
+            }
+        </div>
+        @if (!Model.ActiveJobs.Any())
+        {
+            <p>This company has no active job postings.</p>
+        }
+    </div>
+</section>

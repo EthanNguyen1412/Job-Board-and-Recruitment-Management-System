@@ -1,0 +1,39 @@
+@model IList<AdminJobItemViewModel>
+@{
+    ViewBag.Title = "All job postings";
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        @Html.Partial("_StatusMessage")
+        <div class="jb-panel">
+            <table class="jb-table">
+                <tr><th>Title</th><th>Company</th><th>Employer</th><th>Category</th><th>Status</th><th>Applicants</th><th>Deadline</th><th></th></tr>
+                @foreach (var job in Model)
+                {
+                    <tr>
+                        <td><a href="@Url.Action("Details", "Jobs", new { id = job.Id })">@job.Title</a></td>
+                        <td>@job.CompanyName</td>
+                        <td>@job.EmployerName</td>
+                        <td>@job.CategoryName</td>
+                        <td>@job.Status</td>
+                        <td>@job.ApplicantCount</td>
+                        <td>@job.ApplicationDeadline.ToString("dd/MM/yyyy")</td>
+                        <td class="jb-actions">
+                            @using (Html.BeginForm("CloseJob", "Admin", new { id = job.Id }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit">Close</button>
+                            }
+                            @using (Html.BeginForm("DeleteJob", "Admin", new { id = job.Id }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" onclick="return confirm('Delete this posting?');">Delete</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</section>

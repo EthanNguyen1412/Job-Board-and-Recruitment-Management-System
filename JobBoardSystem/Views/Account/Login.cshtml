@@ -1,0 +1,30 @@
+@model LoginViewModel
+@{
+    ViewBag.Title = "Login";
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="offset-lg-3 col-lg-6">
+                <div class="jb-panel contact">
+                    @Html.Partial("_StatusMessage")
+                    @using (Html.BeginForm("Login", "Account", new { returnUrl = Request.QueryString["returnUrl"] }, FormMethod.Post))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.ValidationSummary(true)
+                        <label>Email</label>
+                        @Html.TextBoxFor(m => m.Email, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Email)
+                        <label>Password</label>
+                        @Html.PasswordFor(m => m.Password, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(m => m.Password)
+                        <label>@Html.CheckBoxFor(m => m.RememberMe) Remember me</label>
+                        <div><button type="submit" class="contact_btn">Login</button></div>
+                    }
+                    <p><a href="@Url.Action("Register", "Account")">Create an account</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

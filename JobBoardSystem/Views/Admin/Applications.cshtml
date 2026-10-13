@@ -1,0 +1,44 @@
+@model IList<ApplicantItemViewModel>
+@{
+    ViewBag.Title = "Applications";
+    var statuses = (IList<SelectListItem>)ViewBag.Statuses;
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        @Html.Partial("_StatusMessage")
+        <div class="jb-panel">
+            @using (Html.BeginForm("Applications", "Admin", FormMethod.Get))
+            {
+                <label>Status</label>
+                @Html.DropDownList("status", statuses, "All statuses", new { @class = "form-control" })
+                <button type="submit" class="contact_btn">Filter</button>
+            }
+            <table class="jb-table">
+                <tr><th>Job</th><th>Candidate</th><th>Cover letter</th><th>Applied</th><th>Status</th></tr>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.JobTitle</td>
+                        <td>@item.CandidateName<br />@item.Email</td>
+                        <td>@item.CoverLetter</td>
+                        <td>@item.AppliedAt.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @using (Html.BeginForm("UpdateStatus", "Admin", new { id = item.ApplicationId }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <select name="status" class="form-control">
+                                    @foreach (var status in statuses)
+                                    {
+                                        <option value="@status.Value" @(status.Value == item.Status.ToString() ? "selected" : "")>@status.Text</option>
+                                    }
+                                </select>
+                                <button type="submit">Update</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</section>

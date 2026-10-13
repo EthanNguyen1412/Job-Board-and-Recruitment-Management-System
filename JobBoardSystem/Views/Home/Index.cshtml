@@ -1,0 +1,70 @@
+@model HomeViewModel
+@{
+    ViewBag.Title = "Home";
+}
+<section class="home_bg">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12 text-center">
+                <div class="hero-text">
+                    <h2>Find the next role. Hire the next colleague.</h2>
+                    <p>Search open positions by keyword, category, location, salary, and work type.</p>
+                    @using (Html.BeginForm("Index", "Jobs", FormMethod.Get))
+                    {
+                        <div class="row justify-content-center">
+                            <div class="col-md-6">
+                                <input type="text" name="keyword" class="form-control" placeholder="Job title, skill, or company" />
+                            </div>
+                            <div class="col-md-2">
+                                <button type="submit" class="contact_btn">Search jobs</button>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="feature_area">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-4"><div class="jb-stat"><strong>@Model.ActiveJobCount</strong><span>Active postings</span></div></div>
+            <div class="col-md-4"><div class="jb-stat"><strong>@Model.CompanyCount</strong><span>Companies</span></div></div>
+            <div class="col-md-4"><div class="jb-stat"><strong>@Model.CategoryCount</strong><span>Job categories</span></div></div>
+        </div>
+        <div class="section-title text-center">
+            <h2>Browse by category</h2>
+            <p>Categories are managed by the administrator and loaded from the database.</p>
+        </div>
+        <div class="row">
+            @foreach (var category in Model.Categories)
+            {
+                <div class="col-lg-4 col-sm-6">
+                    <div class="single_feature">
+                        <h4><a href="@Url.Action("Index", "Jobs", new { categoryId = category.Id })">@category.Name</a></h4>
+                        <p>@category.Description</p>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+<section class="blog_area section-padding">
+    <div class="container">
+        <div class="section-title text-center">
+            <h2>Featured jobs</h2>
+        </div>
+        <div class="row">
+            @foreach (var job in Model.FeaturedJobs)
+            {
+                <div class="col-lg-4 col-sm-6">
+                    @Html.Partial("_JobCard", job)
+                </div>
+            }
+        </div>
+        @if (!Model.FeaturedJobs.Any())
+        {
+            <p class="text-center">No featured jobs are open right now.</p>
+        }
+    </div>
+</section>

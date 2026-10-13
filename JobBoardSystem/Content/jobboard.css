@@ -1,0 +1,47 @@
+body { color: #1b2032; }
+.home_bg { background: #0e5ca6 url("../templates/assets/img/bg/home-bg.jpg") center center / cover no-repeat; }
+.site-logo a { color: #fff; font-weight: 700; letter-spacing: 0.5px; }
+.jb-panel {
+    background: #fff;
+    border-radius: 6px;
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 24px rgba(14, 28, 48, 0.06);
+}
+.jb-panel h3, .jb-panel h4 { margin-bottom: 16px; }
+.jb-table { width: 100%; background: #fff; }
+.jb-table th { background: #0e5ca6; color: #fff; font-weight: 500; }
+.jb-table th, .jb-table td { padding: 12px; vertical-align: top; border-bottom: 1px solid #e6e9ef; }
+.jb-badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: #eef4fb;
+    color: #0e5ca6;
+    font-size: 12px;
+    margin: 0 6px 6px 0;
+}
+.jb-badge.status-active, .jb-badge.status-offered, .jb-badge.status-shortlisted { background: #e7f6ee; color: #1d7a45; }
+.jb-badge.status-closed, .jb-badge.status-rejected, .jb-badge.status-expired { background: #fdecec; color: #b42318; }
+.jb-badge.status-submitted, .jb-badge.status-underreview { background: #fff6e5; color: #9a6700; }
+.jb-alert { padding: 12px 16px; border-radius: 4px; margin-bottom: 16px; }
+.jb-alert.ok { background: #e7f6ee; color: #1d7a45; }
+.jb-alert.err { background: #fdecec; color: #b42318; }
+.jb-stat { background: #fff; padding: 24px; text-align: center; margin-bottom: 20px; box-shadow: 0 8px 24px rgba(14, 28, 48, 0.06); }
+.jb-stat strong { display: block; font-size: 32px; color: #0e5ca6; }
+.skill-check { display: inline-block; margin: 0 16px 10px 0; }
+.nav-logout { background: transparent; border: 0; color: inherit; padding: 25px 20px; font-size: 16px; cursor: pointer; }
+.nav-logout:hover { color: #ffaa17; }
+.progress-line { height: 10px; background: #e6e9ef; border-radius: 10px; overflow: hidden; }
+.progress-line span { display: block; height: 100%; background: #ffaa17; }
+.company-mark {
+    width: 72px; height: 72px; border-radius: 8px; background: #0e5ca6; color: #fff;
+    display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700; margin-bottom: 12px;
+}
+.company-mark img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+.home_blog_content { text-align: left; }
+.filter-form .form-control, .jb-panel .form-control, .jb-panel select, .jb-panel textarea, .jb-panel input[type="text"], .jb-panel input[type="email"], .jb-panel input[type="password"], .jb-panel input[type="number"], .jb-panel input[type="date"] {
+    margin-bottom: 12px;
+}
+.field-validation-error, .validation-summary-errors { color: #b42318; }
+.jb-actions form { display: inline-block; margin-right: 8px; }

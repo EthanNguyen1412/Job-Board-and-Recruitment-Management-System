@@ -1,0 +1,71 @@
+@model JobDetailsViewModel
+@{
+    ViewBag.Title = Model.Job.Title;
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        @Html.Partial("_StatusMessage")
+        <div class="jb-panel">
+            <h2>@Model.Job.Title</h2>
+            <p>
+                @if (Model.Job.CompanyProfileId.HasValue)
+                {
+                    <a href="@Url.Action("Details", "Companies", new { id = Model.Job.CompanyProfileId })">@Model.Job.CompanyName</a>
+                }
+                else
+                {
+                    @Model.Job.CompanyName
+                }
+            </p>
+            <span class="jb-badge">@Model.Job.JobCategory.Name</span>
+            <span class="jb-badge">@Model.Job.Location</span>
+            <span class="jb-badge">@Model.Job.WorkType.GetDisplayName()</span>
+            <span class="jb-badge">@Model.StatusName</span>
+            <p>Salary: @JobRules.SalaryText(Model.Job.SalaryMin, Model.Job.SalaryMax)</p>
+            <p>Application deadline: @Model.Job.ApplicationDeadline.ToString("dd/MM/yyyy")</p>
+            <h4>Description</h4>
+            <p>@Model.Job.Description</p>
+            <h4>Required skills</h4>
+            <p>
+                @foreach (var skill in Model.RequiredSkills)
+                {
+                    <span class="jb-badge">@skill</span>
+                }
+            </p>
+            <div class="jb-actions">
+                @if (Model.CanApply)
+                {
+                    <a class="contact_btn" href="@Url.Action("Apply", "Jobs", new { id = Model.Job.Id })">Apply</a>
+                }
+                else if (!string.IsNullOrEmpty(Model.ApplyBlockReason))
+                {
+                    <div class="jb-alert err">@Model.ApplyBlockReason</div>
+                    if (Model.ApplyBlockReason.Contains("profile"))
+                    {
+                        <a class="contact_btn" href="@Url.Action("Profile", "Candidate")">Create profile</a>
+                    }
+                }
+                @if (User.IsInRole(RoleNames.JobSeeker))
+                {
+                    if (Model.IsSaved)
+                    {
+                        using (Html.BeginForm("Unsave", "Jobs", new { id = Model.Job.Id }, FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="contact_btn">Remove saved job</button>
+                        }
+                    }
+                    else
+                    {
+                        using (Html.BeginForm("Save", "Jobs", new { id = Model.Job.Id }, FormMethod.Post))
+                        {
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="contact_btn">Save job</button>
+                        }
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</section>

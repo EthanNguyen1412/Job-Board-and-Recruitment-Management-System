@@ -1,0 +1,57 @@
+@model JobSearchViewModel
+@{
+    ViewBag.Title = "Jobs";
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        @Html.Partial("_StatusMessage")
+        <div class="jb-panel filter-form">
+            @using (Html.BeginForm("Index", "Jobs", FormMethod.Get))
+            {
+                <div class="row">
+                    <div class="col-md-4">
+                        <label>Keyword</label>
+                        <input type="text" name="keyword" value="@Model.Keyword" class="form-control" />
+                    </div>
+                    <div class="col-md-4">
+                        <label>Category</label>
+                        @Html.DropDownList("categoryId", Model.Categories, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-4">
+                        <label>Location</label>
+                        @Html.DropDownList("location", Model.Locations, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-3">
+                        <label>Work type</label>
+                        @Html.DropDownList("workType", Model.WorkTypes, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-3">
+                        <label>Status</label>
+                        @Html.DropDownList("status", Model.Statuses, new { @class = "form-control" })
+                    </div>
+                    <div class="col-md-3">
+                        <label>Salary from</label>
+                        <input type="number" step="1" name="salaryMin" value="@Model.SalaryMin" class="form-control" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Salary to</label>
+                        <input type="number" step="1" name="salaryMax" value="@Model.SalaryMax" class="form-control" />
+                    </div>
+                    <div class="col-md-12">
+                        <button type="submit" class="contact_btn">Filter</button>
+                    </div>
+                </div>
+            }
+        </div>
+        <p>@Model.Jobs.Count posting(s)</p>
+        <div class="row">
+            @foreach (var job in Model.Jobs)
+            {
+                <div class="col-lg-4 col-sm-6">
+                    @Html.Partial("_JobCard", job)
+                </div>
+            }
+        </div>
+    </div>
+</section>

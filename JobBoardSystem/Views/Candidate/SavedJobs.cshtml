@@ -1,0 +1,26 @@
+@model IList<JobListItemViewModel>
+@{
+    ViewBag.Title = "Saved jobs";
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        <div class="row">
+            @foreach (var job in Model)
+            {
+                <div class="col-lg-4 col-sm-6">
+                    @Html.Partial("_JobCard", job)
+                    @using (Html.BeginForm("Unsave", "Jobs", new { id = job.Id, returnUrl = Request.RawUrl }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="contact_btn">Remove</button>
+                    }
+                </div>
+            }
+        </div>
+        @if (!Model.Any())
+        {
+            <p>You have not saved any jobs.</p>
+        }
+    </div>
+</section>

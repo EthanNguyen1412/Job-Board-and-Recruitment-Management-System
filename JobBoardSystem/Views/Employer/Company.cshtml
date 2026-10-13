@@ -1,0 +1,45 @@
+@model CompanyFormViewModel
+@{
+    ViewBag.Title = "Company profile";
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="offset-lg-2 col-lg-8">
+                <div class="jb-panel contact">
+                    @Html.Partial("_StatusMessage")
+                    @if (!string.IsNullOrEmpty(Model.LogoPath))
+                    {
+                        <img src="@Url.Content("~/" + Model.LogoPath)" alt="Logo" style="max-height:80px" />
+                    }
+                    @using (Html.BeginForm("Company", "Employer", FormMethod.Post, new { enctype = "multipart/form-data" }))
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Id)
+                        @Html.ValidationSummary(true)
+                        <label>Company name</label>
+                        @Html.TextBoxFor(m => m.CompanyName, new { @class = "form-control" })
+                        <label>Description</label>
+                        @Html.TextAreaFor(m => m.Description, 5, 40, new { @class = "form-control" })
+                        <label>Industry</label>
+                        @Html.TextBoxFor(m => m.Industry, new { @class = "form-control" })
+                        <label>Website</label>
+                        @Html.TextBoxFor(m => m.Website, new { @class = "form-control" })
+                        <label>Address</label>
+                        @Html.TextBoxFor(m => m.Address, new { @class = "form-control" })
+                        <label>Phone</label>
+                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
+                        <label>Logo</label>
+                        <input type="file" name="logoFile" />
+                        <div><button type="submit" class="contact_btn">Save company profile</button></div>
+                    }
+                    @if (Model.Id > 0)
+                    {
+                        <p><a href="@Url.Action("Details", "Companies", new { id = Model.Id })">View public page</a></p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

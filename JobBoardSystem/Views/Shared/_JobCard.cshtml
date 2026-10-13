@@ -1,0 +1,17 @@
+@model JobListItemViewModel
+<div class="home_single_blog">
+    <div class="home_blog_content">
+        <div class="blog_title_info">
+            <h2><a href="@Url.Action("Details", "Jobs", new { id = Model.Id })">@Model.Title</a></h2>
+            <span>@Model.CompanyName</span>
+            <span>@Model.CategoryName</span>
+        </div>
+        <p>@Model.Location · @Model.WorkType</p>
+        <p>@Model.Salary</p>
+        <span class="jb-badge">@Model.Status</span>
+        <span class="jb-badge">Deadline @Model.ApplicationDeadline.ToString("dd/MM/yyyy")</span>
+        <div>
+            <a class="home_b_btn" href="@Url.Action("Details", "Jobs", new { id = Model.Id })">View job</a>
+        </div>
+    </div>
+</div>

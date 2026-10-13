@@ -1,0 +1,8 @@
+@if (TempData["Message"] != null)
+{
+    <div class="jb-alert ok">@TempData["Message"]</div>
+}
+@if (TempData["Error"] != null)
+{
+    <div class="jb-alert err">@TempData["Error"]</div>
+}

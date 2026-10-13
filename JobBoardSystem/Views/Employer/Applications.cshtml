@@ -1,0 +1,51 @@
+@model ApplicantPageViewModel
+@{
+    ViewBag.Title = "Applicants";
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        @Html.Partial("_StatusMessage")
+        <div class="jb-panel">
+            <h3>@Model.JobTitle</h3>
+            <table class="jb-table">
+                <tr><th>Candidate</th><th>Cover letter</th><th>Applied</th><th>Status</th><th></th></tr>
+                @foreach (var item in Model.Applicants)
+                {
+                    <tr>
+                        <td>
+                            <strong>@item.CandidateName</strong><br />
+                            @item.Email<br />
+                            @item.Headline
+                        </td>
+                        <td>@item.CoverLetter</td>
+                        <td>@item.AppliedAt.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @using (Html.BeginForm("UpdateStatus", "Employer", new { id = item.ApplicationId }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <select name="status" class="form-control">
+                                    @foreach (var status in Model.Statuses)
+                                    {
+                                        <option value="@status.Value" @(status.Value == item.Status.ToString() ? "selected" : "")>@status.Text</option>
+                                    }
+                                </select>
+                                <button type="submit">Update</button>
+                            }
+                        </td>
+                        <td>
+                            @if (item.HasResume)
+                            {
+                                <a href="@Url.Action("DownloadResume", "Employer", new { id = item.ApplicationId })">Resume</a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+            @if (!Model.Applicants.Any())
+            {
+                <p>This posting has no applicants.</p>
+            }
+        </div>
+    </div>
+</section>

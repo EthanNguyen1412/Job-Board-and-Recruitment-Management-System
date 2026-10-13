@@ -1,0 +1,24 @@
+@model ApplyViewModel
+@{
+    ViewBag.Title = "Apply";
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        <div class="jb-panel contact">
+            <h3>@Model.JobTitle</h3>
+            <p>@Model.CompanyName</p>
+            <p>Your candidate profile will be sent with this application.</p>
+            @using (Html.BeginForm())
+            {
+                @Html.AntiForgeryToken()
+                @Html.HiddenFor(m => m.JobPostingId)
+                @Html.ValidationSummary(true)
+                <label>Cover letter</label>
+                @Html.TextAreaFor(m => m.CoverLetter, 8, 40, new { @class = "form-control" })
+                @Html.ValidationMessageFor(m => m.CoverLetter)
+                <button type="submit" class="contact_btn">Submit application</button>
+            }
+        </div>
+    </div>
+</section>

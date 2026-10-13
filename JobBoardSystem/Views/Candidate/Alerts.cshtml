@@ -1,0 +1,63 @@
+@model AlertPageViewModel
+@{
+    ViewBag.Title = "Job alerts";
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        @Html.Partial("_StatusMessage")
+        <div class="jb-panel contact">
+            <h3>New keyword alert</h3>
+            @using (Html.BeginForm("AddAlert", "Candidate"))
+            {
+                @Html.AntiForgeryToken()
+                <input type="text" name="Keyword" class="form-control" placeholder="Keyword, for example Developer" required />
+                <button type="submit" class="contact_btn">Create alert</button>
+            }
+        </div>
+        @foreach (var alert in Model.Alerts)
+        {
+            <div class="jb-panel">
+                <h4>@alert.Keyword</h4>
+                <span class="jb-badge">@(alert.IsActive ? "Active" : "Paused")</span>
+                <div class="jb-actions">
+                    @using (Html.BeginForm("ToggleAlert", "Candidate", new { id = alert.Id }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit">@(alert.IsActive ? "Pause" : "Activate")</button>
+                    }
+                    @using (Html.BeginForm("DeleteAlert", "Candidate", new { id = alert.Id }))
+                    {
+                        @Html.AntiForgeryToken()
+                        <button type="submit">Delete</button>
+                    }
+                </div>
+                <table class="jb-table">
+                    <tr><th>Matching posting</th><th>Company</th><th>Matched</th><th></th></tr>
+                    @foreach (var match in alert.Matches.OrderByDescending(item => item.MatchedAt))
+                    {
+                        <tr>
+                            <td><a href="@Url.Action("Details", "Jobs", new { id = match.JobPostingId })">@match.JobPosting.Title</a></td>
+                            <td>@match.JobPosting.CompanyName</td>
+                            <td>@match.MatchedAt.ToString("dd/MM/yyyy") @(match.IsRead ? "" : "(new)")</td>
+                            <td>
+                                @if (!match.IsRead)
+                                {
+                                    using (Html.BeginForm("MarkAlertRead", "Candidate", new { id = match.Id }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit">Mark read</button>
+                                    }
+                                }
+                            </td>
+                        </tr>
+                    }
+                </table>
+                @if (!alert.Matches.Any())
+                {
+                    <p>No matching postings yet.</p>
+                }
+            </div>
+        }
+    </div>
+</section>

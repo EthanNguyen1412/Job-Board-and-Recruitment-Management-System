@@ -1,0 +1,30 @@
+@model AdminUserEditViewModel
+@{
+    ViewBag.Title = "Edit user";
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        <div class="row">
+            <div class="offset-lg-3 col-lg-6">
+                <div class="jb-panel contact">
+                    @using (Html.BeginForm())
+                    {
+                        @Html.AntiForgeryToken()
+                        @Html.HiddenFor(m => m.Id)
+                        @Html.ValidationSummary(true)
+                        <p>Email: @Model.Email</p>
+                        <p>Role: @Model.Role</p>
+                        <label>Full name</label>
+                        @Html.TextBoxFor(m => m.FullName, new { @class = "form-control" })
+                        <label>Phone</label>
+                        @Html.TextBoxFor(m => m.Phone, new { @class = "form-control" })
+                        <label><input type="checkbox" name="IsActive" value="true" @(Model.IsActive ? "checked" : "") /> Active</label>
+                        <input type="hidden" name="IsActive" value="false" />
+                        <button type="submit" class="contact_btn">Save user</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

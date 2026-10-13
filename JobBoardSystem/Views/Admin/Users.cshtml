@@ -1,0 +1,38 @@
+@model IList<AdminUserItemViewModel>
+@{
+    ViewBag.Title = "Users";
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        @Html.Partial("_StatusMessage")
+        <div class="jb-panel">
+            <table class="jb-table">
+                <tr><th>Name</th><th>Email</th><th>Role</th><th>Status</th><th>Created</th><th></th></tr>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.FullName</td>
+                        <td>@user.Email</td>
+                        <td>@user.Role</td>
+                        <td>@(user.IsActive ? "Active" : "Disabled")</td>
+                        <td>@user.CreatedAt.ToString("dd/MM/yyyy")</td>
+                        <td class="jb-actions">
+                            <a href="@Url.Action("EditUser", "Admin", new { id = user.Id })">Edit</a>
+                            @using (Html.BeginForm("ToggleUser", "Admin", new { id = user.Id }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit">@(user.IsActive ? "Disable" : "Enable")</button>
+                            }
+                            @using (Html.BeginForm("DeleteUser", "Admin", new { id = user.Id }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" onclick="return confirm('Delete this user?');">Delete</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</section>

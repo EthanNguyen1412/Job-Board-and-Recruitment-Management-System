@@ -1,0 +1,42 @@
+@model IList<EmployerJobItemViewModel>
+@{
+    ViewBag.Title = "Job postings";
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        @Html.Partial("_StatusMessage")
+        <p><a class="contact_btn" href="@Url.Action("CreateJob", "Employer")">Create posting</a></p>
+        <div class="jb-panel">
+            <table class="jb-table">
+                <tr><th>Title</th><th>Category</th><th>Status</th><th>Deadline</th><th>Applicants</th><th></th></tr>
+                @foreach (var job in Model)
+                {
+                    <tr>
+                        <td><a href="@Url.Action("Details", "Jobs", new { id = job.Id })">@job.Title</a></td>
+                        <td>@job.CategoryName</td>
+                        <td>@job.Status</td>
+                        <td>@job.ApplicationDeadline.ToString("dd/MM/yyyy")</td>
+                        <td><a href="@Url.Action("Applications", "Employer", new { id = job.Id })">@job.ApplicantCount</a></td>
+                        <td class="jb-actions">
+                            <a href="@Url.Action("EditJob", "Employer", new { id = job.Id })">Edit</a>
+                            @if (job.CanClose)
+                            {
+                                using (Html.BeginForm("CloseJob", "Employer", new { id = job.Id }))
+                                {
+                                    @Html.AntiForgeryToken()
+                                    <button type="submit">Close</button>
+                                }
+                            }
+                            @using (Html.BeginForm("DeleteJob", "Employer", new { id = job.Id }))
+                            {
+                                @Html.AntiForgeryToken()
+                                <button type="submit" onclick="return confirm('Delete this posting?');">Delete</button>
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</section>

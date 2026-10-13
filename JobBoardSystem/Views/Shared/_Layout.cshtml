@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>@ViewBag.Title - Job Board</title>
+    <link rel="stylesheet" href="@Url.Content("~/templates/assets/bootstrap/css/bootstrap.min.css")" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Oswald:300,400,500,600" />
+    <link rel="stylesheet" href="@Url.Content("~/templates/assets/fonts/font-awesome.min.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/templates/assets/fonts/themify-icons.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/templates/assets/owlcarousel/css/owl.carousel.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/templates/assets/owlcarousel/css/owl.theme.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/templates/assets/css/fonts.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/templates/assets/css/animate.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/templates/assets/css/magnific-popup.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/templates/assets/css/menu.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/templates/assets/css/style.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/templates/assets/css/responsive.css")" />
+    <link rel="stylesheet" href="@Url.Content("~/Content/jobboard.css")" />
+</head>
+<body data-spy="scroll" data-offset="80">
+    <div class="preloader">
+        <div class="spinner">
+            <div class="double-bounce1"></div>
+            <div class="double-bounce2"></div>
+        </div>
+    </div>
+    <div class="site-mobile-menu site-navbar-target">
+        <div class="site-mobile-menu-header">
+            <div class="site-mobile-menu-close mt-3">
+                <span class="icon-close2 js-menu-toggle"></span>
+            </div>
+        </div>
+        <div class="site-mobile-menu-body"></div>
+    </div>
+    <header class="site-navbar js-sticky-header site-navbar-target" role="banner">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-6 col-xl-2">
+                    <h1 class="mb-0 site-logo"><a href="@Url.Action("Index", "Home")">JobBoard</a></h1>
+                </div>
+                <div class="col-12 col-md-10 d-none d-xl-block">
+                    <nav class="site-navigation position-relative text-right" role="navigation">
+                        <ul class="site-menu main-menu js-clone-nav mr-auto d-none d-lg-block">
+                            <li><a class="nav-link" href="@Url.Action("Index", "Home")">Home</a></li>
+                            <li><a class="nav-link" href="@Url.Action("Index", "Jobs")">Jobs</a></li>
+                            <li><a class="nav-link" href="@Url.Action("Index", "Companies")">Companies</a></li>
+                            @if (User.IsInRole(RoleNames.JobSeeker))
+                            {
+                                <li class="has-children">
+                                    <a href="@Url.Action("Profile", "Candidate")" class="nav-link">Candidate</a>
+                                    <ul class="dropdown">
+                                        <li><a href="@Url.Action("Profile", "Candidate")">My profile</a></li>
+                                        <li><a href="@Url.Action("Applications", "Candidate")">My applications</a></li>
+                                        <li><a href="@Url.Action("SavedJobs", "Candidate")">Saved jobs</a></li>
+                                        <li><a href="@Url.Action("Alerts", "Candidate")">Job alerts</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            @if (User.IsInRole(RoleNames.Employer))
+                            {
+                                <li class="has-children">
+                                    <a href="@Url.Action("Dashboard", "Employer")" class="nav-link">Employer</a>
+                                    <ul class="dropdown">
+                                        <li><a href="@Url.Action("Dashboard", "Employer")">Dashboard</a></li>
+                                        <li><a href="@Url.Action("Company", "Employer")">Company profile</a></li>
+                                        <li><a href="@Url.Action("Jobs", "Employer")">Job postings</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            @if (User.IsInRole(RoleNames.Administrator))
+                            {
+                                <li class="has-children">
+                                    <a href="@Url.Action("Dashboard", "Admin")" class="nav-link">Admin</a>
+                                    <ul class="dropdown">
+                                        <li><a href="@Url.Action("Dashboard", "Admin")">Dashboard</a></li>
+                                        <li><a href="@Url.Action("Users", "Admin")">Users</a></li>
+                                        <li><a href="@Url.Action("Categories", "Admin")">Categories</a></li>
+                                        <li><a href="@Url.Action("Jobs", "Admin")">Job postings</a></li>
+                                        <li><a href="@Url.Action("Applications", "Admin")">Applications</a></li>
+                                    </ul>
+                                </li>
+                            }
+                            @if (User.Identity.IsAuthenticated)
+                            {
+                                <li class="has-children">
+                                    <a href="@Url.Action("Edit", "Account")" class="nav-link">@ViewBag.FullName</a>
+                                    <ul class="dropdown">
+                                        <li><a href="@Url.Action("Edit", "Account")">Account</a></li>
+                                        <li><a href="@Url.Action("ChangePassword", "Account")">Change password</a></li>
+                                        <li>
+                                            @using (Html.BeginForm("LogOff", "Account", FormMethod.Post))
+                                            {
+                                                @Html.AntiForgeryToken()
+                                                <button type="submit" class="nav-logout">Log off</button>
+                                            }
+                                        </li>
+                                    </ul>
+                                </li>
+                            }
+                            else
+                            {
+                                <li><a class="nav-link" href="@Url.Action("Login", "Account")">Login</a></li>
+                                <li><a class="nav-link" href="@Url.Action("Register", "Account")">Register</a></li>
+                            }
+                        </ul>
+                    </nav>
+                </div>
+                <div class="col-6 d-inline-block d-xl-none ml-md-0 py-3" style="position: relative; top: 3px;">
+                    <a href="#" class="site-menu-toggle js-menu-toggle float-right"><span class="icon-menu h3"></span></a>
+                </div>
+            </div>
+        </div>
+    </header>
+    @RenderBody()
+    <div class="footer">
+        <div class="container">
+            <div class="row footer_bg">
+                <div class="col-lg-4 col-sm-6">
+                    <div class="footer_logo">
+                        <h4>JobBoard</h4>
+                        <p>Connect job seekers with employers. Search vacancies, manage applications, and publish company profiles.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <div class="single_footer">
+                        <h4>Explore</h4>
+                        <ul>
+                            <li><a href="@Url.Action("Index", "Jobs")">Job listings</a></li>
+                            <li><a href="@Url.Action("Index", "Companies")">Companies</a></li>
+                            <li><a href="@Url.Action("Register", "Account")">Create an account</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-sm-6">
+                    <div class="single_footer">
+                        <h4>Account</h4>
+                        <ul>
+                            <li><a href="@Url.Action("Login", "Account")">Login</a></li>
+                            <li><a href="@Url.Action("Edit", "Account")">Personal information</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 text-center">
+                    <div class="footer_copyright">
+                        <p>&copy; @DateTime.Now.Year Job Board and Recruitment Management System</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="@Url.Content("~/templates/assets/js/jquery-1.12.4.min.js")"></script>
+    <script src="@Url.Content("~/templates/assets/bootstrap/js/bootstrap.min.js")"></script>
+    <script src="@Url.Content("~/templates/assets/js/modernizr-2.8.3.min.js")"></script>
+    <script src="@Url.Content("~/templates/assets/owlcarousel/js/owl.carousel.min.js")"></script>
+    <script src="@Url.Content("~/templates/assets/js/jquery.magnific-popup.min.js")"></script>
+    <script src="@Url.Content("~/templates/assets/js/jquery.appear.js")"></script>
+    <script src="@Url.Content("~/templates/assets/js/wow.min.js")"></script>
+    <script src="@Url.Content("~/templates/assets/js/menu.js")"></script>
+    <script src="@Url.Content("~/templates/assets/js/jquery.sticky.js")"></script>
+    <script src="@Url.Content("~/templates/assets/js/scrolltopcontrol.js")"></script>
+    <script src="@Url.Content("~/templates/assets/js/scripts.js")"></script>
+    @RenderSection("scripts", required: false)
+</body>
+</html>

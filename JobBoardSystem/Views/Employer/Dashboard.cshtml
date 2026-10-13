@@ -1,0 +1,39 @@
+@model DashboardViewModel
+@{
+    ViewBag.Title = "Employer dashboard";
+}
+@Html.Partial("_PageHeader")
+<section class="section-padding">
+    <div class="container">
+        @Html.Partial("_StatusMessage")
+        <div class="row">
+            <div class="col-md-4"><div class="jb-stat"><strong>@Model.ActiveJobCount</strong><span>Active postings</span></div></div>
+            <div class="col-md-4"><div class="jb-stat"><strong>@Model.TotalJobCount</strong><span>All postings</span></div></div>
+            <div class="col-md-4"><div class="jb-stat"><strong>@Model.ApplicationCount</strong><span>Applications received</span></div></div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="jb-panel">
+                    <h3>Application volume</h3>
+                    <table class="jb-table">
+                        @foreach (var item in Model.ApplicationsByStatus)
+                        {
+                            <tr><td>@item.Name</td><td>@item.Count</td></tr>
+                        }
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="jb-panel">
+                    <h3>Applications by category</h3>
+                    <table class="jb-table">
+                        @foreach (var item in Model.PopularCategories)
+                        {
+                            <tr><td>@item.Name</td><td>@item.Count</td></tr>
+                        }
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
